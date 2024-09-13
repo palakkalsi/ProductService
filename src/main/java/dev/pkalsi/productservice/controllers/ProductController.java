@@ -1,15 +1,16 @@
 package dev.pkalsi.productservice.controllers;
 
+import dev.pkalsi.productservice.ProductNotFoundException;
+import dev.pkalsi.productservice.dto.ErrorDto;
+import dev.pkalsi.productservice.dto.ProductRequestDto;
 import dev.pkalsi.productservice.dto.ProductResponseDto;
 import dev.pkalsi.productservice.models.Product;
 import dev.pkalsi.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class ProductController {
@@ -22,26 +23,48 @@ public class ProductController {
     }
 
     @GetMapping("/product/{id}")
-    public ProductResponseDto getProductById(@PathVariable("id") Long id) {
+    public ProductResponseDto getProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
        Product product = productService.getProductById(id);
        return ProductResponseDto.from(product);
     }
 
     @GetMapping("/product")
-    public String getAllProducts(){
-
-        return "All products";
+    public List<ProductResponseDto> getAllProducts(){
+        List<Product> products = productService.getAllProducts();
+        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+        for(Product product : products) {
+            productResponseDtos.add(ProductResponseDto.from(product));
+        }
+        return productResponseDtos;
     }
 
-    public void createProduct(){
-
+    @PostMapping("/product")
+    public ProductResponseDto createProduct(@RequestBody ProductRequestDto productRequestDto) {
+        Product product = productService.createProduct(productRequestDto.getTitle(), productRequestDto.getDescription(),
+                productRequestDto.getPrice(),productRequestDto.getImageUrl(),productRequestDto.getCategoryName());
+        return ProductResponseDto.from(product);
     }
 
+    @PutMapping("/product/update/{id}")
     public void updateProduct(){
 
     }
 
+    @PatchMapping("/product/pUpdate/{id}")
+    public void partialUpdate(){
+
+    }
+
+    @DeleteMapping("/product/delete/{id}")
     public void deleteProduct(){
 
     }
+
+    /*@ExceptionHandler(NullPointerException.class)
+    public ErrorDto nullPointerExceptionHandler(){
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setMessage("Something went wrong");
+        errorDto.setStatus("FAILED");
+        return errorDto;
+    }*/
 }
