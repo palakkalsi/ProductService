@@ -53,4 +53,14 @@ public class FakeStoreProductService implements ProductService {
         return fakeStoreProductResponseDto.toProduct();
     }
 
+    @Override
+    public Product partialUpdateProduct(Long id, Product product) {
+        return null;
+    }
+
+    @Override
+    public void deleteProduct(Long id) throws ProductNotFoundException {
+
+    }
+
 }

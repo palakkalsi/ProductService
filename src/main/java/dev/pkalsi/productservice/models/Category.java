@@ -15,8 +15,8 @@ import java.util.List;
 public class Category extends BaseModal {
     private String name;
     private String description;
-    @OneToMany
-    private List<Product> featutredProducts;
+    /*@OneToMany
+    private List<Product> featutredProducts;*/
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 }

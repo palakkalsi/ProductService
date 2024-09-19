@@ -4,6 +4,7 @@ import dev.pkalsi.productservice.ProductNotFoundException;
 import dev.pkalsi.productservice.dto.ErrorDto;
 import dev.pkalsi.productservice.dto.ProductRequestDto;
 import dev.pkalsi.productservice.dto.ProductResponseDto;
+import dev.pkalsi.productservice.models.Category;
 import dev.pkalsi.productservice.models.Product;
 import dev.pkalsi.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,14 +51,16 @@ public class ProductController {
 
     }
 
-    @PatchMapping("/product/pUpdate/{id}")
-    public void partialUpdate(){
-
+    @PatchMapping("/product/{id}")
+    public ProductResponseDto partialUpdateProduct(@PathVariable("id") Long id, @RequestBody ProductRequestDto requestDto) throws ProductNotFoundException {
+        Product product = requestDto.toProduct();
+        Product updatedProduct = productService.partialUpdateProduct(id, product);
+        return ProductResponseDto.from(updatedProduct);
     }
 
     @DeleteMapping("/product/delete/{id}")
     public void deleteProduct(){
-
+        //productService.deleteProduct(id);
     }
 
     /*@ExceptionHandler(NullPointerException.class)
